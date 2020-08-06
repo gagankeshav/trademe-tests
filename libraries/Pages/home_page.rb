@@ -4,6 +4,20 @@ class HomePageObjects
     @driver = driver
   end
 
+  # UI Elements in the format of how and what as expected by Selenium
+  ELEMENTS = {'motors_category' => [:id, 'SearchTabs1_MotorsLink'],
+              'motors_cat_list' => [:xpath, "//*[@class='motors-landing-list']/li"],
+              'used_cars_category' => [:xpath, "//*[contains(@href,'/motors/used-cars') and text() = 'Cars for sale']"],
+              'car_makes' => [:id, 'makes'],
+              'search_results' => [:class, 'tmm-search-card-list-view'],
+              'search_bar' => [:id, 'searchString'],
+              'search_button' => [:class, 'icon-search-large'],
+              'save_search_button' => [:class, 'tmicon-heart-add'],
+              'listing_title' => [:id, 'ListingDateBox_TitleText'],
+              'key_details' => [:id, 'AttributesDisplay_attributesSection'],
+              'key_labels' => [:class, 'key-details-attribute-label'],
+              'key_values' => [:class, 'key-details-attribute-value']}
+
   def select_category(category_name)
     wait_for_element(category_name)
     find_element(category_name).click
@@ -72,24 +86,10 @@ class HomePageObjects
   end
 
   def find_element(element)
-    @driver.find_element(@@elements[element][0], @@elements[element][1])
+    @driver.find_element(ELEMENTS[element][0], ELEMENTS[element][1])
   end
 
   def find_elements(element)
-    @driver.find_elements(@@elements[element][0], @@elements[element][1])
+    @driver.find_elements(ELEMENTS[element][0], ELEMENTS[element][1])
   end
-
-  # UI Elements in the format of how and what as expected by Selenium
-  @@elements = {'motors_category' => [:id, 'SearchTabs1_MotorsLink'],
-                'motors_cat_list' => [:xpath, "//*[@class='motors-landing-list']/li"],
-                'used_cars_category' => [:xpath, "//*[contains(@href,'/motors/used-cars') and text() = 'Cars for sale']"],
-                'car_makes' => [:id, 'makes'],
-                'search_results' => [:class, 'tmm-search-card-list-view'],
-                'search_bar' => [:id, 'searchString'],
-                'search_button' => [:class, 'icon-search-large'],
-                'save_search_button' => [:class, 'tmicon-heart-add'],
-                'listing_title' => [:id, 'ListingDateBox_TitleText'],
-                'key_details' => [:id, 'AttributesDisplay_attributesSection'],
-                'key_labels' => [:class, 'key-details-attribute-label'],
-                'key_values' => [:class, 'key-details-attribute-value']}
 end
