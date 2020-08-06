@@ -19,15 +19,13 @@ class HomePageObjects
 
   def select_category(category_name)
     wait_for_element(category_name)
-    how, what = @@elements[category_name][0], @@elements[category_name][1]
-    @driver.find_element(how, what).click
+    find_element(category_name).click
   end
 
   def get_lists_in_categories(sub_category_name)
     wait_for_element(sub_category_name)
-    how, what = @@elements[sub_category_name][0], @@elements[sub_category_name][1]
     str = []
-    @driver.find_elements(how, what).each do |ele|
+    find_elements(sub_category_name).each do |ele|
       str.push(ele.text.split(/\n/))
     end
     hsh = {}
@@ -39,15 +37,13 @@ class HomePageObjects
 
   def open_category(category_name)
     wait_for_element(category_name)
-    how, what = @@elements[category_name][0], @@elements[category_name][1]
-    @driver.find_element(how, what).click
+    find_element(category_name).click
   end
 
   def get_car_makes
     wait_for_element('car_makes')
-    how, what = @@elements['car_makes'][0], @@elements['car_makes'][1]
     car_makes = []
-    @driver.find_element(how, what).text.split(/(?<=\)\s)/).each do |make|
+    find_element('car_makes').text.split(/(?<=\)\s)/).each do |make|
       car_makes.push(make.gsub(/\n/, '').gsub(/\) /, ')'))
     end
     car_makes
@@ -55,33 +51,28 @@ class HomePageObjects
 
   def perform_search(query)
     wait_for_element('search_bar')
-    how, what = @@elements['search_bar'][0], @@elements['search_bar'][1]
-    @driver.find_element(how, what).send_keys query
+    find_element('search_bar').send_keys query
     wait_for_element('search_button')
-    how, what = @@elements['search_button'][0], @@elements['search_button'][1]
-    @driver.find_element(how, what).click
+    find_element('search_button').click
     wait_for_element('save_search_button')
   end
 
   def open_search_result
     wait_for_element('search_results')
-    how, what = @@elements['search_results'][0], @@elements['search_results'][1]
-    @driver.find_element(how, what).click
+    find_element('search_results').click
     wait_for_element('listing_title')
   end
 
   def get_key_details
     wait_for_element('key_labels')
-    how, what = @@elements['key_labels'][0], @@elements['key_labels'][1]
     labels = []
-    @driver.find_elements(how, what).each do |label|
+    find_elements('key_labels').each do |label|
       labels.push(label.text)
     end
 
     wait_for_element('key_values')
-    how, what = @@elements['key_values'][0], @@elements['key_values'][1]
     values = []
-    @driver.find_elements(how, what).each do |value|
+    find_elements('key_values').each do |value|
       values.push(value.text)
     end
 
@@ -89,8 +80,15 @@ class HomePageObjects
   end
 
   def wait_for_element(element)
-    wait = Selenium::WebDriver::Wait.new(timeout: 10) # seconds
-    how, what = @@elements[element][0], @@elements[element][1]
-    wait.until { @driver.find_element(how, what) }
+    wait = Selenium::WebDriver::Wait.new(timeout: 10)
+    wait.until { find_element(element) }
+  end
+
+  def find_element(element)
+    @driver.find_element(@@elements[element][0], @@elements[element][1])
+  end
+
+  def find_elements(element)
+    @driver.find_elements(@@elements[element][0], @@elements[element][1])
   end
 end
