@@ -3,7 +3,8 @@ require 'helpers'
 
 @driver = Selenium::WebDriver.for :chrome
 @driver.manage.window.maximize
-@driver.get('https://www.tmsandbox.co.nz/')
+@config = YAML.load_file(File.expand_path('../../config/config.yml', __FILE__))
+@driver.get(@config['trademe_sandbox_webaddress'])
 @home_page = HomePageObjects.new(@driver)
 
 test_counter = 0
@@ -18,8 +19,8 @@ else
 end
 
 puts "#{test_counter+=1}. Validate that Used Cars listing is not zero via API"
-response = RestClient.get("https://api.tmsandbox.co.nz/v1/Search/Motors/Used.json",
-                          headers={'Authorization' => 'OAuth oauth_consumer_key="1502DBFF8AF3BFCF635274F810A72542", oauth_signature_method="PLAINTEXT", oauth_signature="7F09CAFF278B6B2DE290FD4FC55CFE39&"'})
+response = RestClient.get(@config['used_cars_api'],
+                          headers={'Authorization' => "OAuth oauth_consumer_key=\"#{@config['oauth_consumer_key']}\", oauth_signature_method='PLAINTEXT', oauth_signature=\"#{@config['oauth_signature']}\""})
 response_body = JSON.parse(response.body)
 if response.code == 200 && response_body.fetch('TotalCount') == 0
   puts "  Cars for sale are 0".red
@@ -37,7 +38,7 @@ else
 end
 
 puts "#{test_counter+=1}. Validate that the make Kia exists in the Used Cars category via API"
-response = RestClient.get("https://api.tmsandbox.co.nz/v1/Categories/UsedCars.json")
+response = RestClient.get(@config['used_car_categories_api'])
 response_body = JSON.parse(response.body)
 if response.code == 200
   puts "  Response code is expected: #{response.code}".green
@@ -57,8 +58,7 @@ puts "#{test_counter+=1}. Validate that Number plate, Kilometres, Body, Fuel typ
 @home_page.perform_search('Audi')
 @home_page.open_search_result
 key_details = @home_page.get_key_details
-details = ["Number plate", "Kilometres", "Body", "Fuel type", "Engine size", "Transmission", "History", "Registration expires","WoF expires"]
-details.each do |key|
+@config['ui_keys'].each do |key|
   if key_details.keys.include?(key)
     puts "  #{key} exists".green
   else
@@ -67,11 +67,10 @@ details.each do |key|
 end
 
 puts "#{test_counter+=1}. Validate that Number plate, Kilometres, Body, Fuel type, Engine size, Transmission, History, Registration expires, WoF expires exist in the key details via API"
-response = RestClient.get("https://api.tmsandbox.co.nz/v1/Search/Motors/Used.json",
-                          headers={'Authorization' => 'OAuth oauth_consumer_key="1502DBFF8AF3BFCF635274F810A72542", oauth_signature_method="PLAINTEXT", oauth_signature="7F09CAFF278B6B2DE290FD4FC55CFE39&"'})
+response = RestClient.get(@config['used_cars_api'],
+                          headers={'Authorization' => "OAuth oauth_consumer_key=\"#{@config['oauth_consumer_key']}\", oauth_signature_method='PLAINTEXT', oauth_signature=\"#{@config['oauth_signature']}\""})
 response_body = JSON.parse(response.body)
-details = ["NumberPlate", "Odometer", "BodyStyle", "Fuel", "EngineSize", "Transmission", "ImportHistory", "RegistrationExpires","WofExpires"]
-details.each do |key|
+@config['api_keys'].each do |key|
   if response_body.fetch('List')[0].keys.include?(key)
     puts "  #{key} exists".green
   else

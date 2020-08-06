@@ -1,0 +1,26 @@
+# Configuration used in the automation tests should be defined here
+trademe_sandbox_webaddress: https://www.tmsandbox.co.nz/
+used_cars_api: https://api.tmsandbox.co.nz/v1/Search/Motors/Used.json
+used_car_categories_api: https://api.tmsandbox.co.nz/v1/Categories/UsedCars.json
+oauth_consumer_key: 1502DBFF8AF3BFCF635274F810A72542
+oauth_signature: 7F09CAFF278B6B2DE290FD4FC55CFE39&
+ui_keys:
+- Number plate
+- Kilometres
+- Body
+- Fuel type
+- Engine size
+- Transmission
+- History
+- Registration expires
+- WoF expires
+api_keys:
+  - NumberPlate
+  - Odometer
+  - BodyStyle
+  - Fuel
+  - EngineSize
+  - Transmission
+  - ImportHistory
+  - RegistrationExpires
+  - WofExpires
