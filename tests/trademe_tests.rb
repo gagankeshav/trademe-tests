@@ -2,8 +2,8 @@
 $LOAD_PATH.unshift File.expand_path('../../', __FILE__)
 require 'helpers'
 
-# Instantiating webdriver instance for Chrome browser
-@driver = Selenium::WebDriver.for :chrome
+# Instantiating webdriver instance for browser provided during runtime, currently only chrome
+@driver = Selenium::WebDriver.for ARGV[0].to_sym
 @driver.manage.window.maximize
 
 # Loading the configuration from config.yml file
