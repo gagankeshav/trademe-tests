@@ -3,7 +3,17 @@ $LOAD_PATH.unshift File.expand_path('../../', __FILE__)
 require 'helpers'
 
 # Instantiating webdriver instance for browser provided during runtime, currently only chrome
-@driver = Selenium::WebDriver.for ARGV[0].to_sym
+if ARGV[0] == 'chrome'
+  if ARGV.length == 1
+    @driver = Selenium::WebDriver.for ARGV[0].to_sym
+  else
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    @driver = Selenium::WebDriver.for :chrome, options: options
+  end
+end
+
 @driver.manage.window.maximize
 
 # Loading the configuration from config.yml file
