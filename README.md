@@ -8,7 +8,7 @@ Repo for Automation of UI and API Mock Tests for Trademe Website
 
 # Executing the tests
 Execute below mentioned command in Powershell (Windows):
-docker build . -t <any tag name for the image e.g. qa_test> (e.g. docker build . -t qa_test)
+- docker build . -t <any tag name for the image e.g. qa_test> (e.g. docker build . -t qa_test)
 
 # Pre-requisites:
 1. Ruby should be installed on the system.
